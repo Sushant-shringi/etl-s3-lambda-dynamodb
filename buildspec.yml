@@ -2,11 +2,9 @@ version: 0.2
 phases:
   build:
     commands:
-      - pip install -r requirements.txt || true
+      - pip install -r sample_data/requirements.txt || true
       - python -m py_compile lambda_function.py
-      - zip lambda_deploy_package.zip lambda_function.py
-      - aws lambda update-function-code --function-name micromobility-etl-function --zip-file fileb://lambda_deploy_package.zip
+      - echo "Build completed"
 artifacts:
   files:
     - lambda_function.py
-    - requirements.txt
