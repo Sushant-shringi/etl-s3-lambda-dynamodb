@@ -1,0 +1,24 @@
+[
+  {
+    "trip_id": "MM-OS-00000001",
+    "city": "Oslo",
+    "operator": "Voi",
+    "trip_start_datetime": "2025-11-12 13:41:00",
+    "duration_minutes": 11,
+    "distance_km": 2.03
+  },
+  {
+    "trip_id": "MM-GO-00099996",
+    "city": "Gothenburg",
+    "operator": "Voi",
+    "trip_start_datetime": "2025-04-13 09:47:00",
+    "duration_minutes": 42,
+    "distance_km": 9.13
+  },
+  {
+    "city": "InvalidCityData",
+    "operator": "GhostRider",
+    "trip_start_datetime": "2026-01-01 00:00:00",
+    "duration_minutes": 5
+  }
+]
