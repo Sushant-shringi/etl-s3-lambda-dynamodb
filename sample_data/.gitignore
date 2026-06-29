@@ -1,5 +1,0 @@
-#this prevents secret files from accidentally uploading to GitHub
-.env
-*.csv
-*.zip
-__pycache__/
