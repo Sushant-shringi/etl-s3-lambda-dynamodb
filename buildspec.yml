@@ -12,7 +12,7 @@ phases:
 
   build:
     commands:
-      print("Building separate deployment packages for Decoupled Microservices...")
+      
       
       # 1. Extractor Lambda Package
       zip -r extractor_lambda.zip extractor_lambda.py
@@ -54,4 +54,3 @@ artifacts:
     - loader_lambda.zip
 =======
     - loader_lambda.zip
->>>>>>> 7e803f124a1c604206cccfe8efa742694e3e6217
