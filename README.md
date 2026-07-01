@@ -15,38 +15,32 @@ Below is the execution flowchart showing how data moves asynchronously through o
 
 ```mermaid
 graph TD
-    A[📥 S3 Bucket: Raw Upload Log] --> B(⚙️ Lambda 1: Extractor Layer)
+    A[S3 Bucket: Raw Upload Log] --> B[Lambda 1: Extractor Layer]
     
-    subgraph Layer1 [Layer 1: Extraction & Routing]
-        B --> B1{JSON or CSV?}
-        B1 --> B2[Raw JSON Payload]
-        B1 --> B3[Raw CSV Payload]
+    subgraph Layer1 [Layer 1: Extraction and Routing]
+        B --> B1{File Type?}
+        B1 -->|JSON| B2[Raw JSON Payload]
+        B1 -->|CSV| B3[Raw CSV Payload]
     end
 
-    B2 --> C(🚀 Lambda 2: Transformer Layer)
+    B2 --> C[Lambda 2: Transformer Layer]
     B3 --> C
 
-    subgraph Layer2 [Layer 2: Compute & Validation]
+    subgraph Layer2 [Layer 2: Compute and Validation]
         C --> C1{Has trip_id?}
-        C1 -->|No| C2[⚠️ Drop & Log Corrupted Row]
+        C1 -->|No| C2[Drop Corrupted Row]
         C1 -->|Yes| C3[Transform: UPPERCASE operator]
         C3 --> C4{Is Peak Hour?}
-        C4 -->|Yes| C5[Set flag: True]
-        C4 -->|No| C6[Set flag: False]
+        C4 -->|Yes| C5[Set flag True]
+        C4 -->|No| C6[Set flag False]
     end
 
-    C5 --> D(💾 Lambda 3: Loader Layer)
+    C5 --> D[Lambda 3: Loader Layer]
     C6 --> D
 
     subgraph Layer3 [Layer 3: Storage Commit]
         D --> D1[(Storage Table: DynamoDB)]
     end
-
-    style A fill:#ff9900,stroke:#333,stroke-width:2px,color:#fff
-    style B fill:#0073bb,stroke:#333,stroke-width:2px,color:#fff
-    style C fill:#0073bb,stroke:#333,stroke-width:2px,color:#fff
-    style D fill:#0073bb,stroke:#333,stroke-width:2px,color:#fff
-    style D1 fill:#4053D6,stroke:#333,stroke-width:2px,color:#fff
 📂 Project Directory StructurePlaintextetl-s3-lambda-dynamodb/
 ├── 📥 extractor_lambda.py       # Layer 1: Ingests raw storage data log metrics
 ├── ⚙️ transformer_lambda.py     # Layer 2: Runs analytical schemas & compliance rules
