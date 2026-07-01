@@ -7,7 +7,7 @@ phases:
     commands:
       
 <<<<<<< HEAD
-      # Agar koi packages hain toh requerments.txt se install honge
+      
       if [ -f requerments.txt ]; then pip install -r requerments.txt -t .; fi
 
   build:
