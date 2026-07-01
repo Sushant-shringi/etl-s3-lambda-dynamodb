@@ -46,7 +46,6 @@ graph TD
     end
 
 ```
-
 📂 Project Directory StructurePlaintextetl-s3-lambda-dynamodb/
 ├── 📥 extractor_lambda.py       # Layer 1: Ingests raw storage data log metrics
 ├── ⚙️ transformer_lambda.py     # Layer 2: Runs analytical schemas & compliance rules
