@@ -15,12 +15,12 @@ Below is the execution flowchart showing how data moves asynchronously through o
 
 ```mermaid
 graph TD
-    A[📥 S3 Bucket: Raw Upload Log] -->|Triggers| B(⚙️ Lambda 1: Extractor Layer)
+    A[📥 S3 Bucket: Raw Upload Log] --> B(⚙️ Lambda 1: Extractor Layer)
     
     subgraph Layer1 [Layer 1: Extraction & Routing]
         B --> B1{JSON or CSV?}
-        B1 -->|Parse Array| B2[Raw JSON Payload]
-        B1 -->|Parse Rows| B3[Raw CSV Payload]
+        B1 --> B2[Raw JSON Payload]
+        B1 --> B3[Raw CSV Payload]
     end
 
     B2 --> C(🚀 Lambda 2: Transformer Layer)
@@ -31,8 +31,8 @@ graph TD
         C1 -->|No| C2[⚠️ Drop & Log Corrupted Row]
         C1 -->|Yes| C3[Transform: UPPERCASE operator]
         C3 --> C4{Is Peak Hour?}
-        C4 -->|7-9 AM / 4-6 PM| C5[Set flag: True]
-        C4 -->|Off Peak| C6[Set flag: False]
+        C4 -->|Yes| C5[Set flag: True]
+        C4 -->|No| C6[Set flag: False]
     end
 
     C5 --> D(💾 Lambda 3: Loader Layer)
