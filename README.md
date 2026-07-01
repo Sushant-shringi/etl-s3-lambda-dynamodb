@@ -14,6 +14,9 @@
 Below is the execution flowchart showing how data moves asynchronously through our decoupled layers without causing a single point of failure.
 
 ```mermaid
+
+
+
 graph TD
     A[S3 Bucket: Raw Upload Log] --> B[Lambda 1: Extractor Layer]
     
