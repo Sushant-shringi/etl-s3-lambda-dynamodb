@@ -41,6 +41,9 @@ graph TD
     subgraph Layer3 [Layer 3: Storage Commit]
         D --> D1[(Storage Table: DynamoDB)]
     end
+
+
+
 📂 Project Directory StructurePlaintextetl-s3-lambda-dynamodb/
 ├── 📥 extractor_lambda.py       # Layer 1: Ingests raw storage data log metrics
 ├── ⚙️ transformer_lambda.py     # Layer 2: Runs analytical schemas & compliance rules
