@@ -1,5 +1,5 @@
 # etl-s3-lambda-dynamodb
-# ⚡ Serverless Serverless: Decoupled ETL Data Pipeline
+# ⚡ Serverless ETL: Decoupled Data Pipeline
 > A Production-Grade Microservices Architecture built with Python & AWS Serverless Design Patterns.
 
 ![AWS Lambda](https://img.shields.io/badge/AWS_Lambda-FF9900?style=for-the-badge&logo=aws-lambda&logoColor=white)
@@ -11,34 +11,35 @@
 
 ## 🗺️ System Architecture & Data Flow
 
-Below is the live execution flowchart of how data moves asynchronously through our decoupled layers without causing a single point of failure (Monolithic Bottleneck).
+Below is the execution flowchart showing how data moves asynchronously through our decoupled layers without causing a single point of failure.
 
 ```mermaid
 graph TD
-    A[📥 S3 Bucket: Raw Upload Log] -->|Triggers Trigger| B(⚙️ Lambda 1: Extractor Layer)
+    A[📥 S3 Bucket: Raw Upload Log] -->|Triggers| B(⚙️ Lambda 1: Extractor Layer)
     
-    subgraph Layer 1: Extraction & Routing
-        B -->|Detects Extension| B1{JSON or CSV?}
+    subgraph Layer1 [Layer 1: Extraction & Routing]
+        B --> B1{JSON or CSV?}
         B1 -->|Parse Array| B2[Raw JSON Payload]
         B1 -->|Parse Rows| B3[Raw CSV Payload]
     end
 
-    B2 -->|Passes Payload| C(🚀 Lambda 2: Transformer Layer)
-    B3 -->|Passes Payload| C
+    B2 --> C(🚀 Lambda 2: Transformer Layer)
+    B3 --> C
 
-    subgraph Layer 2: Compute & Validation
-        C -->|Data Quality Scan| C1{Has trip_id?}
+    subgraph Layer2 [Layer 2: Compute & Validation]
+        C --> C1{Has trip_id?}
         C1 -->|No| C2[⚠️ Drop & Log Corrupted Row]
         C1 -->|Yes| C3[Transform: UPPERCASE operator]
-        C3 -->|Time Check| C4{Is Peak Hour?}
+        C3 --> C4{Is Peak Hour?}
         C4 -->|7-9 AM / 4-6 PM| C5[Set flag: True]
         C4 -->|Off Peak| C6[Set flag: False]
     end
 
-    C3 -->|Passes Structured Payload| D(💾 Lambda 3: Loader Layer)
+    C5 --> D(💾 Lambda 3: Loader Layer)
+    C6 --> D
 
-    subgraph Layer 3: Storage Commit
-        D -->|Safe Write Request| D1[(Storage Table: DynamoDB)]
+    subgraph Layer3 [Layer 3: Storage Commit]
+        D --> D1[(Storage Table: DynamoDB)]
     end
 
     style A fill:#ff9900,stroke:#333,stroke-width:2px,color:#fff
