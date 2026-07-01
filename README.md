@@ -18,14 +18,6 @@ A Production-Grade Event-Driven ETL Pipeline built using AWS Serverless Services
 
 </p>
 
-<p align="center">
-
-![AWS](https://img.shields.io/badge/AWS-Cloud-orange?style=for-the-badge)
-![Python](https://img.shields.io/badge/Python-Expert-blue?style=for-the-badge)
-![SQL](https://img.shields.io/badge/SQL-Intermediate-success?style=for-the-badge)
-![Data Engineering](https://img.shields.io/badge/Data-Engineering-red?style=for-the-badge)
-
-</p>
 
 
 # ⚡ Serverless ETL Data Pipeline
