@@ -24,16 +24,14 @@ jobs:
         python -m pip install --upgrade pip
         if [ -f requerments.txt ]; then pip install -r requerments.txt; fi
 
-    - name: Validate and Lint Code Layout
+    - name: Validate Layout
       run: |
-        # Verifying all three decoupled layers are physically present
-        test -f extractor_lambda.py && echo "Extractor checked"
-        test -f transformer_lambda.py && echo "Transformer checked"
-        test -f loader_lambda.py && echo "Loader checked"
+        test -f extractor_lambda.py
+        test -f transformer_lambda.py
+        test -f loader_lambda.py
 
-    - name: Simulate Production Build Artifacts
+    - name: Build Artifacts
       run: |
-        # Zipping independent services for artifact testing
         zip extractor_service.zip extractor_lambda.py
         zip transformer_service.zip transformer_lambda.py
         zip loader_service.zip loader_lambda.py
