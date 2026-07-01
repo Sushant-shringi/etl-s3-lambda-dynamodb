@@ -1,80 +1,376 @@
 # etl-s3-lambda-dynamodb
-# ⚡ Serverless ETL: Decoupled Data Pipeline
-> A Production-Grade Microservices Architecture built with Python & AWS Serverless Design Patterns.
+<p align="center">
+  <img src="etl.png" alt="Serverless ETL Banner" width="100%">
+</p>
 
-![AWS Lambda](https://img.shields.io/badge/AWS_Lambda-FF9900?style=for-the-badge&logo=aws-lambda&logoColor=white)
-![Amazon DynamoDB](https://img.shields.io/badge/Amazon_DynamoDB-4053D6?style=for-the-badge&logo=amazon-dynamodb&logoColor=white)
-![Python](https://img.shields.io/badge/Python_3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Architecture](https://img.shields.io/badge/Architecture-Microservices-brightgreen?style=for-the-badge)
+<h1 align="center">⚡ Serverless ETL Data Pipeline</h1>
+
+<p align="center">
+A Production-Grade Event-Driven ETL Pipeline built using AWS Serverless Services and Python.
+</p>
+
+<p align="center">
+
+![Python](https://img.shields.io/badge/Python-3.12-blue?style=for-the-badge&logo=python)
+![AWS Lambda](https://img.shields.io/badge/AWS-Lambda-orange?style=for-the-badge&logo=awslambda)
+![Amazon S3](https://img.shields.io/badge/Amazon-S3-red?style=for-the-badge&logo=amazons3)
+![Amazon DynamoDB](https://img.shields.io/badge/Amazon-DynamoDB-blue?style=for-the-badge&logo=amazondynamodb)
+
+</p>
+
+<p align="center">
+
+![AWS](https://img.shields.io/badge/AWS-Cloud-orange?style=for-the-badge)
+![Python](https://img.shields.io/badge/Python-Expert-blue?style=for-the-badge)
+![SQL](https://img.shields.io/badge/SQL-Intermediate-success?style=for-the-badge)
+![Data Engineering](https://img.shields.io/badge/Data-Engineering-red?style=for-the-badge)
+
+</p>
+
+
+# ⚡ Serverless ETL Data Pipeline
+
+<p align="center">
+  <b>A Production-Grade Event-Driven ETL Pipeline built using AWS Serverless Services and Python.</b>
+  <br><br>
+
+![Python](https://img.shields.io/badge/Python-3.12-blue?style=for-the-badge&logo=python)
+![AWS Lambda](https://img.shields.io/badge/AWS-Lambda-orange?style=for-the-badge&logo=awslambda)
+![Amazon S3](https://img.shields.io/badge/Amazon-S3-red?style=for-the-badge&logo=amazons3)
+![Amazon DynamoDB](https://img.shields.io/badge/Amazon-DynamoDB-blue?style=for-the-badge&logo=amazondynamodb)
+![Architecture](https://img.shields.io/badge/Architecture-Serverless-success?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Completed-brightgreen?style=for-the-badge)
+
+</p>
 
 ---
 
-## 🗺️ System Architecture & Data Flow
+# 📌 Overview
 
-Below is the execution flowchart showing how data moves asynchronously through our decoupled layers without causing a single point of failure.
+This project demonstrates a **production-inspired serverless ETL architecture** built on AWS.
+
+Whenever a JSON or CSV file is uploaded, the pipeline automatically:
+
+- 📥 Extracts incoming data
+- 🔍 Validates records
+- 🔄 Transforms the dataset
+- 📊 Computes business rules
+- 💾 Stores processed data in DynamoDB
+
+The project follows an **event-driven microservices architecture**, where every Lambda function has a single responsibility, making the system scalable, maintainable, and fault tolerant.
+
+---
+
+# ✨ Features
+
+- ✅ Event-Driven Architecture
+- ✅ AWS Lambda Functions
+- ✅ Amazon S3 Trigger
+- ✅ Data Validation
+- ✅ Data Transformation
+- ✅ Peak Hour Detection
+- ✅ DynamoDB Storage
+- ✅ Modular Design
+- ✅ Local Pipeline Simulation
+- ✅ Easily Deployable to AWS
+
+---
+
+# 🏗️ System Architecture
 
 ```mermaid
+flowchart LR
 
+A["📥 S3 Bucket"] --> B["⚙️ Extractor Lambda"]
 
+B --> C["🔄 Transformer Lambda"]
 
-graph TD
-    A[S3 Bucket: Raw Upload Log] --> B[Lambda 1: Extractor Layer]
-    
-    subgraph Layer1 [Layer 1: Extraction and Routing]
-        B --> B1{File Type?}
-        B1 -->|JSON| B2[Raw JSON Payload]
-        B1 -->|CSV| B3[Raw CSV Payload]
-    end
+C --> D{"trip_id Exists?"}
 
-    B2 --> C[Lambda 2: Transformer Layer]
-    B3 --> C
+D -->|No| E["❌ Reject Record"]
 
-    subgraph Layer2 [Layer 2: Compute and Validation]
-        C --> C1{Has trip_id?}
-        C1 -->|No| C2[Drop Corrupted Row]
-        C1 -->|Yes| C3[Transform: UPPERCASE operator]
-        C3 --> C4{Is Peak Hour?}
-        C4 -->|Yes| C5[Set flag True]
-        C4 -->|No| C6[Set flag False]
-    end
+D -->|Yes| F["Normalize Operator"]
 
-    C5 --> D[Lambda 3: Loader Layer]
-    C6 --> D
+F --> G{"Peak Hour?"}
 
-    subgraph Layer3 [Layer 3: Storage Commit]
-        D --> D1[(Storage Table: DynamoDB)]
-    end
+G --> H["Set True / False"]
 
+H --> I["💾 Loader Lambda"]
+
+I --> J[("Amazon DynamoDB")]
 ```
-## 📂 Project Directory Structure
+
+---
+
+# ⚙️ Technology Stack
+
+| Category | Technology |
+|-----------|------------|
+| Language | Python 3.12 |
+| Compute | AWS Lambda |
+| Storage | Amazon S3 |
+| Database | Amazon DynamoDB |
+| Architecture | Event Driven |
+| Pattern | Serverless ETL |
+| Testing | Local Simulation |
+
+---
+
+# 🎯 ETL Workflow
+
+```text
+Upload File
+
+↓
+
+S3 Bucket
+
+↓
+
+Lambda 1
+(Extraction)
+
+↓
+
+Lambda 2
+(Transformation)
+
+↓
+
+Validation
+
+↓
+
+Business Rules
+
+↓
+
+Lambda 3
+(Loader)
+
+↓
+
+DynamoDB
+```
+# 📂 Project Structure
 
 ```text
 etl-s3-lambda-dynamodb/
-├── 📥 extractor_lambda.py
-├── ⚙️ transformer_lambda.py
-├── 💾 loader_lambda.py
-├── 🎮 main_pipeline_runner.py
-└── 📝 README.md
+│
+├── 📄 extractor_lambda.py        # Extracts raw data from incoming files
+├── 📄 transformer_lambda.py      # Cleans and transforms records
+├── 📄 loader_lambda.py           # Loads processed data into DynamoDB
+├── 📄 main_pipeline_runner.py    # Local pipeline simulator
+├── 📄 sample_raw_data.json       # Sample input file
+├── 📄 sample_raw_data.csv        # Sample CSV input
+└── 📄 README.md
 ```
-🛠️ Operational Specs & Transformation LawsMetric PillarOperation Execution RuleOutput Result StandardData Quality FilterCheck if explicit trip_id exists in the record.Drops missing rows automatically without breaking pipeline state.Schema NormalizationConvert string sequences under the operator column.vogo ➡️ VOGO, bounce ➡️ BOUNCE, yulu ➡️ YULUBI Flag ComputationVerify timestamp boundary cycles against rush hours.Assigns an is_peak_hour: True flag during 07-09 & 16-18 intervals.🚀 Execution Simulation (Local Diagnostics)We utilize a centralized controller to evaluate decoupled responses without wasting live cloud network computing time. Run this diagnostic test locally inside your terminal:PowerShellpython main_pipeline_runner.py
-Flawless Live Logs Preview:JSON==========================================================
- 🔥 RUNNING DECOUPLED MICROSERVICES PIPELINE CONTROLLER   
+
+---
+
+# ⚙️ Pipeline Processing Rules
+
+| Stage | Operation | Result |
+|--------|-----------|--------|
+| 📥 Extract | Detect JSON / CSV | Read input records |
+| 🔍 Validate | Check `trip_id` | Reject invalid records |
+| 🔄 Transform | Convert operator names to uppercase | Standardized data |
+| 📊 Business Logic | Detect Peak Hour | `is_peak_hour = True/False` |
+| 💾 Load | Insert into DynamoDB | Process completed |
+
+---
+
+# 🚀 Running the Project
+
+### Clone Repository
+
+```bash
+git clone https://github.com/Sushant-shringi/etl-s3-lambda-dynamodb.git
+
+cd etl-s3-lambda-dynamodb
+```
+
+---
+
+### Run Locally
+
+```bash
+python main_pipeline_runner.py
+```
+
+---
+
+# 📋 Expected Output
+
+```text
+==========================================================
+🔥 RUNNING SERVERLESS ETL PIPELINE
 ==========================================================
 
---- 🏁 STARTING JSON LIFE-CYCLE INTERACTION ---
-📥 Lambda 1 (Extractor) Triggered for Key: raw/sample_raw_data.json
-📂 Local Simulation Active: Bypassing AWS S3 Connection...
-📋 [Extractor] Parsing: JSON format detected
-➡️ Extractor Task Completed successfully.
+📥 Extractor Lambda Triggered
+✔ JSON file detected
 
-⚙️ Lambda 2 (Transformer) Active... Normalizing structural schemas
-  ⚠️ Validation Failure: Skipping row missing mandatory 'trip_id'
-✅ Transformer Task Completed. Valid: 2, Rejected: 1
+⚙ Transformer Lambda Running
+✔ 2 valid records
+✘ 1 invalid record skipped
 
-💾 Lambda 3 (Loader) Active... Preparing simulation database commit
-  🔬 [DynamoDB Mock Save] Key: 'T101' | Op: VOGO | PeakHour: True
-  🔬 [DynamoDB Mock Save] Key: 'T102' | Op: BOUNCE | PeakHour: False
-🚀 Loader Task Completed. Target states synced safely. Total items inserted: 2
+💾 Loader Lambda Running
+✔ Record T101 inserted
+✔ Record T102 inserted
 
-JSON Pipeline Output: Successfully loaded 2 records.
+Pipeline Completed Successfully
 ==========================================================
+```
+
+---
+
+# 📊 Sample Data Transformation
+
+### Input
+
+| trip_id | operator | timestamp |
+|----------|----------|-----------|
+| T101 | vogo | 08:15 |
+| T102 | bounce | 13:30 |
+| NULL | yulu | 18:05 |
+
+↓
+
+### Output
+
+| trip_id | operator | is_peak_hour |
+|----------|----------|--------------|
+| T101 | VOGO | ✅ True |
+| T102 | BOUNCE | ❌ False |
+
+---
+
+# 🧪 Local Simulation
+
+Instead of deploying every change to AWS, this project supports local execution.
+
+Benefits:
+
+- ⚡ Faster development
+- 🐞 Easy debugging
+- 💰 No AWS execution cost
+- 🔄 Test pipeline logic before deployment
+
+---
+---
+<p align="center">
+<img height="170" src="https://github-readme-stats.vercel.app/api?username=Sushant-shringi&show_icons=true&theme=tokyonight"/>
+
+<img height="170" src="https://github-readme-streak-stats.herokuapp.com/?user=Sushant-shringi&theme=tokyonight"/>
+</p>
+
+![Stars](https://img.shields.io/github/stars/Sushant-shringi/etl-s3-lambda-dynamodb?style=for-the-badge)
+
+![Forks](https://img.shields.io/github/forks/Sushant-shringi/etl-s3-lambda-dynamodb?style=for-the-badge)
+
+![Issues](https://img.shields.io/github/issues/Sushant-shringi/etl-s3-lambda-dynamodb?style=for-the-badge)
+
+---
+
+# 🎯 Key Highlights
+
+- 🚀 Production-inspired Serverless ETL Architecture
+- ⚡ Event-Driven Workflow using AWS Lambda
+- 📥 Automatic Processing of JSON & CSV Files
+- 🔍 Data Validation & Quality Checks
+- 🔄 Data Standardization & Transformation
+- 📊 Peak Hour Business Rule Computation
+- 💾 DynamoDB Integration
+- 🧪 Local Simulation for Development & Testing
+- 📦 Modular & Scalable Project Structure
+
+---
+
+# 🧠 What I Learned
+
+This project helped me gain practical experience with:
+
+- AWS Lambda Event Triggers
+- Amazon S3 Object Events
+- Amazon DynamoDB Operations
+- Serverless Architecture Design
+- ETL Pipeline Development
+- Data Validation & Transformation
+- Event-Driven Systems
+- Python Modular Programming
+- Building Cloud-Native Applications
+
+---
+
+# 🔮 Future Improvements
+
+- ⏳ Add SQS for asynchronous processing
+- 📈 Integrate CloudWatch Monitoring
+- 🔔 Add SNS notifications
+- 🧪 Unit Tests with pytest
+- 🐳 Docker support for local development
+- ☁️ Infrastructure as Code using AWS SAM or Terraform
+- 🔐 IAM least-privilege policies
+- 📊 Monitoring dashboard
+
+---
+
+# 📸 Demo
+
+> Replace the image below with your project screenshot or GIF.
+
+<p align="center">
+<img src="images/demo.gif" width="900">
+</p>
+
+---
+
+# 📈 Architecture Principles
+
+| Principle | Implementation |
+|-----------|----------------|
+| Single Responsibility | One Lambda per stage |
+| Loose Coupling | Event-driven workflow |
+| Scalability | Serverless compute |
+| Fault Isolation | Independent processing layers |
+| Maintainability | Modular project structure |
+
+---
+
+# 📬 Contact
+
+If you have any suggestions or feedback, feel free to connect.
+
+- 💼 GitHub: https://github.com/Sushant-shringi
+- 📧 Email: *Add your email here*
+- 💬 LinkedIn: *Add your LinkedIn profile*
+
+---
+
+# ⭐ Support
+
+If you found this project useful,
+
+⭐ Star this repository
+
+🍴 Fork it
+
+🛠️ Build something awesome from it
+
+---
+
+# 👨‍💻 Author
+
+**Sushant Shringi**
+
+Cloud & Data Engineering Enthusiast
+
+Python • AWS • SQL • ETL • Data Engineering
+
+---
+
+<p align="center">
+
+Made with ❤️ using Python & AWS Serverless
+
+</p>
