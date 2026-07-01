@@ -6,6 +6,7 @@ phases:
       python: 3.12
     commands:
       
+<<<<<<< HEAD
       # Agar koi packages hain toh requerments.txt se install honge
       if [ -f requerments.txt ]; then pip install -r requerments.txt -t .; fi
 
@@ -30,9 +31,27 @@ phases:
       # aws lambda update-function-code --function-name transformer-service --zip-file fileb://transformer_lambda.zip
       # aws lambda update-function-code --function-name loader-service --zip-file fileb://loader_lambda.zip
       print("Build process completed successfully!")
+=======
+      - if [ -f requerments.txt ]; then pip install -r requerments.txt -t .; fi
+
+  build:
+    commands:
+      # Building separate deployment packages for Decoupled Microservices
+      - zip -r extractor_lambda.zip extractor_lambda.py
+      - zip -r transformer_lambda.zip transformer_lambda.py
+      - zip -r loader_lambda.zip loader_lambda.py
+
+  post_build:
+    commands:
+      - echo "Build process completed successfully!"
+>>>>>>> 7e803f124a1c604206cccfe8efa742694e3e6217
 
 artifacts:
   files:
     - extractor_lambda.zip
     - transformer_lambda.zip
+<<<<<<< HEAD
     - loader_lambda.zip
+=======
+    - loader_lambda.zip
+>>>>>>> 7e803f124a1c604206cccfe8efa742694e3e6217
