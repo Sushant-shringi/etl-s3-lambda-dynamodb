@@ -46,12 +46,16 @@ graph TD
     end
 
 ```
-📂 Project Directory StructurePlaintextetl-s3-lambda-dynamodb/
-├── 📥 extractor_lambda.py       # Layer 1: Ingests raw storage data log metrics
-├── ⚙️ transformer_lambda.py     # Layer 2: Runs analytical schemas & compliance rules
-├── 💾 loader_lambda.py          # Layer 3: Dispatches batched commits into databases
-├── 🎮 main_pipeline_runner.py   # Hybrid Central Test Harness & Layer Controller
-└── 📝 README.md                 # System Manual & Architecture Blueprint
+## 📂 Project Directory Structure
+
+```text
+etl-s3-lambda-dynamodb/
+├── 📥 extractor_lambda.py
+├── ⚙️ transformer_lambda.py
+├── 💾 loader_lambda.py
+├── 🎮 main_pipeline_runner.py
+└── 📝 README.md
+```
 🛠️ Operational Specs & Transformation LawsMetric PillarOperation Execution RuleOutput Result StandardData Quality FilterCheck if explicit trip_id exists in the record.Drops missing rows automatically without breaking pipeline state.Schema NormalizationConvert string sequences under the operator column.vogo ➡️ VOGO, bounce ➡️ BOUNCE, yulu ➡️ YULUBI Flag ComputationVerify timestamp boundary cycles against rush hours.Assigns an is_peak_hour: True flag during 07-09 & 16-18 intervals.🚀 Execution Simulation (Local Diagnostics)We utilize a centralized controller to evaluate decoupled responses without wasting live cloud network computing time. Run this diagnostic test locally inside your terminal:PowerShellpython main_pipeline_runner.py
 Flawless Live Logs Preview:JSON==========================================================
  🔥 RUNNING DECOUPLED MICROSERVICES PIPELINE CONTROLLER   
