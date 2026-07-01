@@ -59,6 +59,18 @@ Whenever a JSON or CSV file is uploaded, the pipeline automatically:
 
 The project follows an **event-driven microservices architecture**, where every Lambda function has a single responsibility, making the system scalable, maintainable, and fault tolerant.
 
+Project description...
+
+<p align="center">
+
+![Stars](https://img.shields.io/github/stars/Sushant-shringi/etl-s3-lambda-dynamodb?style=for-the-badge)
+
+![Forks](https://img.shields.io/github/forks/Sushant-shringi/etl-s3-lambda-dynamodb?style=for-the-badge)
+
+![Issues](https://img.shields.io/github/issues/Sushant-shringi/etl-s3-lambda-dynamodb?style=for-the-badge)
+
+</p>
+
 ---
 
 # ✨ Features
