@@ -5,7 +5,7 @@ phases:
     runtime-versions:
       python: 3.12
     commands:
-      print("Installing dependencies if any...")
+      
       # Agar koi packages hain toh requerments.txt se install honge
       if [ -f requerments.txt ]; then pip install -r requerments.txt -t .; fi
 
