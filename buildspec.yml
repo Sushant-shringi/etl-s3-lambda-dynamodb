@@ -5,31 +5,19 @@ phases:
     runtime-versions:
       python: 3.12
     commands:
-      print("Installing dependencies if any...")
       
-      if [ -f requerments.txt ]; then pip install -r requerments.txt -t .; fi
+      - if [ -f requerments.txt ]; then pip install -r requerments.txt -t .; fi
 
   build:
     commands:
-      print("Building separate deployment packages for Decoupled Microservices...")
-      
-      # 1. Extractor Lambda Package
-      zip -r extractor_lambda.zip extractor_lambda.py
-      
-      # 2. Transformer Lambda Package
-      zip -r transformer_lambda.zip transformer_lambda.py
-      
-      # 3. Loader Lambda Package
-      zip -r loader_lambda.zip loader_lambda.py
+      # Building separate deployment packages for Decoupled Microservices
+      - zip -r extractor_lambda.zip extractor_lambda.py
+      - zip -r transformer_lambda.zip transformer_lambda.py
+      - zip -r loader_lambda.zip loader_lambda.py
 
   post_build:
     commands:
-      print("Updating AWS Lambda function codes...")
-      # Note: 'your-extractor-function-name' ki jagah apne actual AWS Lambda ka naam dalna agar deployment commands run karne hain
-      # aws lambda update-function-code --function-name extractor-service --zip-file fileb://extractor_lambda.zip
-      # aws lambda update-function-code --function-name transformer-service --zip-file fileb://transformer_lambda.zip
-      # aws lambda update-function-code --function-name loader-service --zip-file fileb://loader_lambda.zip
-      print("Build process completed successfully!")
+      - echo "Build process completed successfully!"
 
 artifacts:
   files:
