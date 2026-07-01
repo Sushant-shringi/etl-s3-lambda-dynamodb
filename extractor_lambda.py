@@ -1,22 +1,8 @@
 import json
-import csv
 import urllib.parse
+import boto3  # <--- Dusre lambda ko call karne ke liye boto3 chahiye
 
-def parse_json_file(file_content):
-    print("📋 [Extractor] Parsing: JSON format detected")
-    raw_data = json.loads(file_content)
-    return raw_data if isinstance(raw_data, list) else [raw_data]
-
-def parse_csv_file(file_content):
-    print("📋 [Extractor] Parsing: CSV format detected")
-    records = []
-    lines = file_content.splitlines()
-    reader = csv.DictReader(lines)
-    for row in reader:
-        if 'duration_minutes' in row and row['duration_minutes']:
-            row['duration_minutes'] = int(row['duration_minutes'])
-        records.append(dict(row))
-    return records
+# Aapke purane parse_json_file aur parse_csv_file functions yahan upar rahenge...
 
 def lambda_handler(event, context=None):
     try:
@@ -44,7 +30,24 @@ def lambda_handler(event, context=None):
             return {"statusCode": 400, "body": "Unsupported format"}
             
         print("➡️ Extractor Task Completed successfully.")
-        return {"status": "Extracted", "file_processed": key, "data": raw_records}
+        
+        # 🎯 MAIN GAME CHANGER LOGIC HERE:
+        output_payload = {"status": "Extracted", "file_processed": key, "data": raw_records}
+        
+        # Agar context local nahi hai (yaani code sach mein AWS par chal raha hai)
+        if context and hasattr(context, 'function_name'):
+            print("🚀 AWS Environment Detected! Triggering transformer-service...")
+            lambda_client = boto3.client('lambda', region_name='us-east-1') # Apni region check kar lena bhai
+            
+            # Ye line AWS par agle lambda function ko trigger karegi aur data pass karegi
+            lambda_client.invoke(
+                FunctionName='transformer-service',
+                InvocationType='Event', # 'Event' ka matlab Asynchronous trigger (fire and forget)
+                Payload=json.dumps(output_payload)
+            )
+            print("✅ Successfully triggered transformer-service asynchronously.")
+            
+        return output_payload
         
     except Exception as e:
         print(f"❌ Extractor Error: {str(e)}")

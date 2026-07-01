@@ -1,43 +1,42 @@
 import json
-from datetime import datetime, UTC
+import boto3  # <--- Boto3 import karna hoga
 
 def lambda_handler(event, context=None):
-    print("⚙️ Lambda 2 (Transformer) Active... Normalizing structural schemas")
-    raw_records = event.get('data', [])
-    processed_records = []
-    rejected_count = 0
-    
-    for item in raw_records:
-        # Data Quality Filter
-        if 'trip_id' not in item or not item['trip_id']:
-            rejected_count += 1
-            print("  ⚠️ Validation Failure: Skipping row missing mandatory 'trip_id'")
-            continue
-            
-        clean_operator = str(item.get('operator', 'UNKNOWN')).upper()
-        raw_time_str = item.get('trip_start_datetime', '')
+    try:
+        print("📥 Lambda 2 (Transformer) Triggered...")
         
-        try:
-            parsed_dt = datetime.strptime(raw_time_str, "%Y-%m-%d %H:%M:%S")
-            iso_time = parsed_dt.isoformat() + "Z"
-            hour = parsed_dt.hour
-        except Exception:
-            iso_time = datetime.now(UTC).isoformat().replace("+00:00", "Z")
-            hour = datetime.now(UTC).hour
-            
-        # Business Logic Filter
-        is_peak_hour = (7 <= hour <= 9) or (16 <= hour <= 18)
+        # 1. Extractor se aaya hua data nikalna
+        input_data = event.get('data', [])
+        file_processed = event.get('file_processed', 'unknown')
         
-        clean_item = {
-            'record_id': str(item['trip_id']), 
-            'city': str(item.get('city', 'Unknown')),
-            'operator': clean_operator,
-            'trip_start_time': iso_time,
-            'duration_minutes': int(item.get('duration_minutes', 0)) if item.get('duration_minutes') else 0,
-            'is_peak_hour': is_peak_hour,
-            'processed_at': datetime.now(UTC).isoformat().replace("+00:00", "Z")
+        # ... Aapka purana transformation ka logic (clean_records wala) yahan chalega ...
+        # maan lete hain aapka final data 'cleaned_data' variable mein hai:
+        cleaned_data = clean_records(input_data) 
+        
+        print("➡️ Transformer Task Completed successfully.")
+        
+        # 2. Final Payload taiyar karo
+        output_payload = {
+            "status": "Transformed",
+            "file_processed": file_processed,
+            "data": cleaned_data
         }
-        processed_records.append(clean_item)
         
-    print(f"✅ Transformer Task Completed. Valid: {len(processed_records)}, Rejected: {rejected_count}")
-    return {"status": "Transformed", "data": processed_records}
+        # 🎯 AWS Environment Check aur Loader ko Trigger karna
+        if context and hasattr(context, 'function_name'):
+            print("🚀 AWS Environment Detected! Triggering loader-service...")
+            lambda_client = boto3.client('lambda', region_name='us-east-1') # Apni region check kar lena bhai
+            
+            # Ye line AWS par Loader Lambda ko trigger karegi
+            lambda_client.invoke(
+                FunctionName='loader-service',
+                InvocationType='Event', # Asynchronous call
+                Payload=json.dumps(output_payload)
+            )
+            print("✅ Successfully triggered loader-service asynchronously.")
+            
+        return output_payload
+        
+    except Exception as e:
+        print(f"❌ Transformer Error: {str(e)}")
+        return {"status": "Error", "file_processed": "unknown", "data": []}
