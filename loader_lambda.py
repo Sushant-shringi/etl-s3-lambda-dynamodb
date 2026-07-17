@@ -10,7 +10,7 @@ def lambda_handler(event, context=None):
         return {"statusCode": 200, "body": "No data to load"}
         
     for record in clean_records:
-        # Pure Local Mock - Haming bypassed boto3 regional constraints entirely
+       
         print(f"  🔬 [DynamoDB Mock Save] Key: '{record['record_id']}' | Op: {record['operator']} | PeakHour: {record['is_peak_hour']}")
         inserted_count += 1
             
