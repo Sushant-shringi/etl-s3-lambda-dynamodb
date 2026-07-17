@@ -1,8 +1,8 @@
 import json
 import urllib.parse
-import boto3  # <--- Dusre lambda ko call karne ke liye boto3 chahiye
+import boto3  
 
-# Aapke purane parse_json_file aur parse_csv_file functions yahan upar rahenge...
+
 
 def lambda_handler(event, context=None):
     try:
@@ -13,7 +13,7 @@ def lambda_handler(event, context=None):
         print(f"📥 Lambda 1 (Extractor) Triggered for Key: {key}")
         print("📂 Local Simulation Active: Bypassing AWS S3 Connection...")
         
-        # Pure Local Mock Stream to completely isolate AWS Client initialization
+        
         if file_extension == 'json':
             file_content = json.dumps([
                 {"trip_id": "T101", "city": "Pune", "operator": "vogo", "trip_start_datetime": "2026-06-30 08:30:00", "duration_minutes": 15},
@@ -31,18 +31,18 @@ def lambda_handler(event, context=None):
             
         print("➡️ Extractor Task Completed successfully.")
         
-        # 🎯 MAIN GAME CHANGER LOGIC HERE:
+       
         output_payload = {"status": "Extracted", "file_processed": key, "data": raw_records}
         
-        # Agar context local nahi hai (yaani code sach mein AWS par chal raha hai)
+       
         if context and hasattr(context, 'function_name'):
             print("🚀 AWS Environment Detected! Triggering transformer-service...")
-            lambda_client = boto3.client('lambda', region_name='us-east-1') # Apni region check kar lena bhai
+            lambda_client = boto3.client('lambda', region_name='us-east-1') 
             
-            # Ye line AWS par agle lambda function ko trigger karegi aur data pass karegi
+           
             lambda_client.invoke(
                 FunctionName='transformer-service',
-                InvocationType='Event', # 'Event' ka matlab Asynchronous trigger (fire and forget)
+                InvocationType='Event', 
                 Payload=json.dumps(output_payload)
             )
             print("✅ Successfully triggered transformer-service asynchronously.")
