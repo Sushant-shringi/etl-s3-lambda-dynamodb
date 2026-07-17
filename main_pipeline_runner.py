@@ -12,7 +12,7 @@ if __name__ == "__main__":
     print(" 🔥 RUNNING DECOUPLED MICROSERVICES PIPELINE CONTROLLER   ")
     print("==========================================================")
     
-    # 🧪 TEST 1: Simulate JSON File Upload
+   
     json_event = {
         "Records": [{"s3": {"bucket": {"name": "raw-bucket"}, "object": {"key": "raw/sample_raw_data.json"}}}]
     }
